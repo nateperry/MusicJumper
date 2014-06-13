@@ -238,7 +238,6 @@ Graphics = {
 			if (Character.isJumping) {
 				Character.jump();
 			}
-
 			if (Character.isMoving) {
 				Character.move(Character.direction);
 			}
@@ -246,7 +245,6 @@ Graphics = {
 				Character.fall();
 				Character.checkBarCollision();
 			}
-
 			if (!Character.isFalling && !Character.isJumping) {
 				Character.checkBarCollision();
 			}
@@ -254,14 +252,12 @@ Graphics = {
 		}
 		Graphics.updateScore();
 		Character.draw();
-
 		Graphics.animationFrameID = window.requestAnimationFrame(Graphics.update);
 	},
 	updateScore : function () {
 		this.ctx.fillStyle = "#888";
 		this.ctx.fillText('Points : ' + Character.score, 20, 150);
 	},
-
 	endAnimation : function () {
 		this.reset();
 		window.cancelAnimationFrame(Graphics.animationFrameID);
@@ -313,7 +309,6 @@ Character = {
 			if (this.jumpNextMaxHeight == 0) {
 				this.jumpNextMaxHeight = this.position.y - this.jumpHeight;
 			}
-
 			this.position.y = this.position.y - this.jumpForce;
 			console.log(this.position.y, this.jumpNextMaxHeight, this.isJumping);
 			//check if reached jump peak
@@ -364,16 +359,13 @@ Character = {
 				barsInContact.push(bar);
 			}
 		});
-
 		var tallestBar = 0;
 		barsInContact.forEach(function (bar) {
 			if (tallestBar < bar.height) {
 				tallestBar = bar.height;
 			}
 		});
-
 		var onBar = (Graphics.constants.canvasHeight - tallestBar) - Character.height;
-
 		var isCharacterOnBar = false;
 		var isBumpingIntoBar = false;
 		var bumpedBar = null;
@@ -385,7 +377,6 @@ Character = {
 		} else {
 			isCharacterOnBar = true;
 		}
-
 
 		for (var i = 0; i < barsInContact.length; i++) {
 			var bar = barsInContact[i];
@@ -401,7 +392,6 @@ Character = {
 						isCharacterOnBar = false;
 						isBumpingIntoBar = true;
 						bumpedBar = bar.id;
-
 					}
 				}
 			}
