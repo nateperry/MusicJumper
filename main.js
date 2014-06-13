@@ -114,13 +114,13 @@ Graphics = {
 	constants : {	canvasWidth : window.innerWidth, canvasHeight : window.innerHeight, numBars : 30, barFallSpeed : 3, defaultHeight : 10},
 	colors : [
 		//lightblue
-		'#6D9BFF', 
+		'#6D9BFF',
 		//darkblue
-		'#3A60B2', 
+		'#3A60B2',
 		//red
-		'#FF5720', 
+		'#FF5720',
 		//lightgreen
-		'#82CC43', 
+		'#82CC43',
 		//darkgreen
 		'#70A840'
 	],
@@ -161,10 +161,10 @@ Graphics = {
 		this.drawAllRectangles();
 	}, //end createBars
 	generateBar : function (number) {
-		var bar = { 
-			id : number, 
-			height: this.constants.defaultHeight, 
-			color : this.colors[ Math.floor((Math.random()*Graphics.colors.length)) ], 
+		var bar = {
+			id : number,
+			height: this.constants.defaultHeight,
+			color : this.colors[ Math.floor((Math.random()*Graphics.colors.length)) ],
 			width: this.constants.canvasWidth / this.constants.numBars,
 			x : null
 		};
@@ -242,10 +242,14 @@ Graphics = {
 			if (Character.isMoving) {
 				Character.move(Character.direction);
 			}
-			if(Character.isFalling) {		
+			if (Character.isFalling) {
 				Character.fall();
+				Character.checkBarCollision();
 			}
-			Character.checkBarCollision();
+
+			if (!Character.isFalling && !Character.isJumping) {
+				Character.checkBarCollision();
+			}
 			Character.checkBounds();
 		}
 		Graphics.updateScore();
@@ -273,7 +277,9 @@ Character = {
 	height: 51,
 	width: 30,
 	horzSpeed : 3,
-	jumpHeight : 300,
+	jumpHeight : 100,
+	jumpForce: 10,
+	jumpNextMaxHeight: 0,
 	gravity : 4,
 	position : {x: Graphics.constants.canvasWidth - 30, y : 400},
 	isMoving :  false,
@@ -303,15 +309,28 @@ Character = {
 	},
 	jump : function () {
 		if ( this.isJumping && !this.isFalling ) {
-			this.position.y = this.position.y - this.jumpHeight;
-			this.isFalling = true;
-			this.isJumping = false;
+			//set jump max height for current jump
+			if (this.jumpNextMaxHeight == 0) {
+				this.jumpNextMaxHeight = this.position.y - this.jumpHeight;
+			}
+
+			this.position.y = this.position.y - this.jumpForce;
+			console.log(this.position.y, this.jumpNextMaxHeight, this.isJumping);
+			//check if reached jump peak
+			if (this.position.y <= this.jumpNextMaxHeight) {
+				this.isFalling = true;
+				this.isJumping = false;
+				this.jumpNextMaxHeight = 0;
+			} else {
+				this.isFalling = false;
+				this.isJumping = true;
+			}
 		}
 	},
 	fall : function () {
 		if ( this.isFalling ) {
 			//falls based on gravity
-			this.position.y += this.gravity;	
+			this.position.y += this.gravity;
 		}
 	},
 	checkBounds : function () {
@@ -372,7 +391,7 @@ Character = {
 			var bar = barsInContact[i];
 
 			var barY = Graphics.constants.canvasHeight - bar.height;
-			
+
 			if (Character.direction === 'LEFT') {
 				var barRightSide = bar.x + bar.width;
 				var characterRightSide = Character.position.x + Character.width;
@@ -415,7 +434,7 @@ Character = {
 			});
 		}
 	} //end checkBarCollision
-	
+
 };
 
 KeyHandler = {
@@ -450,7 +469,7 @@ KeyHandler = {
 			// A or LEFT_ARROW or D or RIGHT_ARROW
 			Character.isMoving = false;
 			Character.direction = null;
-		} 
+		}
 		else if (key.keyCode === 87 || key.keyCode === 38) {
 			// W or UP_ARROW
 			Character.isJumping = false;
