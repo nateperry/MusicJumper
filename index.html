@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+	<title>Project 2</title>
+	<link rel="stylesheet" href="styles.css" type="text/css" />
+</head>
+<body>
+	<div class="container">
+		<canvas id="canvas">Please install a modern browser.</canvas>
+		<div id="tracklist-container">
+			<ul id="tracklist">
+				<li><a href="#Song" class="track" data-track-name="americas_son">America's Son by Air Review</a></li>
+				<li><a href="#Song" class="track" data-track-name="cradle">Cradle by The Joy Formidable</a></li>
+				<li><a href="#Song" class="track" data-track-name="day_tripper">Day Tripper by The Beatles</a></li>
+				<li><a href="#Song" class="track" data-track-name="rollin_over">Rollin' Over by Skinny Lister</a></li>
+				<li><a href="#Song" class="track" data-track-name="somebody_that_i_used_to_know">Somebody That I Used to Know by Gotye</a></li>
+				<li><a href="#Song" class="track" data-track-name="the_emasculated_man_and_the_city_that_swallowed_him">The Emasculate Man and the City that Swallowed Him by Quiet Company</a></li>
+				<li><a href="#Song" class="track" data-track-name="you_know_me">You Know Me by Air Traffic Controller</a></li>
+			</ul>
+			<div class="panel-button">
+				<h3>Choose a Song</h3>
+			</div>
+		</div>
+		<div id="controls">
+			<audio id="audio" preload="auto" tabindex="0" controls="">
+			  Your browser does not support the audio element.
+			</audio>
+		</div>
+	</div>
+	<div class="instruction-cta open">
+		<div class="inner">
+			<h2>Instructions</h2>
+			<p>To start, choose a song from the list above. Clicking the song name will start the song.</p>
+
+
+			<ul id="key-controls">
+				<li class="item">
+					<h3 class="command">Play / Pause</h3>
+					<span class="control">Spacebar</span>
+				</li><li class="item">
+					<h3 class="command">Left</h3>
+					<span class="control">A or Left Arrow</span>
+				</li><li class="item">
+					<h3 class="command">Right</h3>
+					<span class="control">D or Right Arrow</span>
+				</li><li class="item">
+					<h3 class="command">Jump</h3>
+					<span class="control">W or Up Arrow</span>
+				</li>
+			</ul>
+			<footer>
+				<p>Created by <a href="http://thenateperry.com" target="_blank">Nate Perry</a> &amp; <a href="http://people.rit.edu/jml4020/309/Portfolio2/index.html" target="_blank">Justin Loucks</a></p>
+			</footer>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript" src="dancerjs/dancer.js"></script>
+	<script type="text/javascript" src="dancerjs/plugins/dancer.waveform.js"></script>
+	<script type="text/javascript" src="main.js"></script>
+</body>
+</html>
