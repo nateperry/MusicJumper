@@ -48,6 +48,7 @@ Events = {
 Music = {
 	$player : null,
 	$instructions : null,
+	volume : 0.6,
 	dancer : new Dancer(), // from Dancer.js - code source: https://github.com/jsantell/dancer.js/
 	kick : null,
 	doc : document,
@@ -59,7 +60,7 @@ Music = {
 		this.$instructions = $('.instruction-cta');
 
 		// Set volume to avoid explosion of noise
-		this.$player.volume = 0.6;
+		this.$player.volume = this.volume;
 		this.setupDancer();
 
 		this.addListeners();
@@ -135,7 +136,7 @@ Graphics = {
 		this.canvas.width = this.constants.canvasWidth;
 		this.canvas.height =this.constants.canvasHeight;
 		this.ctx = this.canvas.getContext ('2d');
-		this.ctx.font = "100px Helvetica";
+		this.ctx.font = "10px Helvetica";
 	}, //end setupCanvas
 	drawRectangle : function (x, y, width, height, color) {
 		this.ctx.fillStyle = color;
@@ -180,7 +181,6 @@ Graphics = {
 		var radius = 100 + 150 * Math.abs(Math.cos(that.angle));
 		that.drawArc(that.constants.canvasWidth /2, that.constants.canvasHeight /2, radius, 0, 2*Math.PI, 'rgba(120,120,120,0.1)', 'fill' );
 		that.angle += Math.PI / 64;
-
 	},
 	drawAllRectangles : function () {
 		var that = Graphics;
@@ -198,16 +198,13 @@ Graphics = {
 	startAnimation : function () {
 		this.animationFrameID = window.requestAnimationFrame(this.update);
 	}, //end StartAnimation
-
 	animationFrameID : null, //ID of frame for cancelling animation
 	update : function (timestamp) {
 		/*
-
 		This is the main draw function
 		This gets called roughly 60fps
 
 		NOTE: Back layers need to be drawn first
-
 		*/
 		Graphics.clearCanvas();
 
@@ -218,14 +215,12 @@ Graphics = {
 		for (var c = 0; c < Graphics.bars.length; c++) {
 			var freq = Music.dancer.getSpectrum();
 			var currBar = Graphics.bars[c];
-
 			var newValue = (freq[c] * 1000)  + Graphics.constants.defaultHeight;
 			if (newValue > currBar.height) {
 				currBar.height = newValue;
 			} else {
 				currBar.height -= Graphics.constants.barFallSpeed;
 			}
-
 			if (currBar.height < Graphics.constants.defaultHeight) {
 				currBar.height = Graphics.constants.defaultHeight;
 			}
@@ -233,7 +228,6 @@ Graphics = {
 		Graphics.drawAllRectangles();
 
 		// Character Movement
-
 		if (!Music.isPlaying(Music.$player)) {
 			if (Character.isJumping) {
 				Character.jump();
@@ -241,15 +235,18 @@ Graphics = {
 			if (Character.isMoving) {
 				Character.move(Character.direction);
 			}
-			if (Character.isFalling) {
-				Character.fall();
-				Character.checkBarCollision();
-			}
 			if (!Character.isFalling && !Character.isJumping) {
 				Character.checkBarCollision();
 			}
 			Character.checkBounds();
+		} else {
+			Character.isFalling = true;
 		}
+		if (Character.isFalling) {
+			Character.fall();
+			Character.checkBarCollision();
+		}
+
 		Graphics.updateScore();
 		Character.draw();
 		Graphics.animationFrameID = window.requestAnimationFrame(Graphics.update);
@@ -310,7 +307,6 @@ Character = {
 				this.jumpNextMaxHeight = this.position.y - this.jumpHeight;
 			}
 			this.position.y = this.position.y - this.jumpForce;
-			console.log(this.position.y, this.jumpNextMaxHeight, this.isJumping);
 			//check if reached jump peak
 			if (this.position.y <= this.jumpNextMaxHeight) {
 				this.isFalling = true;
@@ -433,24 +429,28 @@ KeyHandler = {
 		$(window).on('keyup', KeyHandler.onKeyUp);
 	},
 	onKeyDown : function (key) {
-		if (key.keyCode === 87 || key.keyCode === 38) {
-			// W or UP_ARROW
-			key.preventDefault();
-			key.stopPropagation();
-			Character.isJumping = true;
-		} else if (key.keyCode === 65 || key.keyCode === 37) {
-			// A or LEFT_ARROW
-			key.preventDefault();
-			key.stopPropagation();
-			Character.direction = 'LEFT';
-			Character.isMoving = true;
+		if (!Music.isPlaying(Music.$player) ) {
+			if (key.keyCode === 87 || key.keyCode === 38) {
+				// W or UP_ARROW
+				key.preventDefault();
+				key.stopPropagation();
+				if (!Character.isJumping && !Character.isFalling) {
+					Character.isJumping = true;
+				}
+			} else if (key.keyCode === 65 || key.keyCode === 37) {
+				// A or LEFT_ARROW
+				key.preventDefault();
+				key.stopPropagation();
+				Character.direction = 'LEFT';
+				Character.isMoving = true;
 
-		} else if (key.keyCode === 68 || key.keyCode === 39) {
-			// D or RIGHT_ARROW
-			key.preventDefault();
-			key.stopPropagation();
-			Character.direction = 'RIGHT';
-			Character.isMoving = true;
+			} else if (key.keyCode === 68 || key.keyCode === 39) {
+				// D or RIGHT_ARROW
+				key.preventDefault();
+				key.stopPropagation();
+				Character.direction = 'RIGHT';
+				Character.isMoving = true;
+			}
 		}
 	},
 	onKeyUp : function (key) {
@@ -462,9 +462,9 @@ KeyHandler = {
 		}
 		else if (key.keyCode === 87 || key.keyCode === 38) {
 			// W or UP_ARROW
-			Character.isJumping = false;
+			//Character.isJumping = false;
 		}
-		else if (key.keyCode === 32){
+		else if (key.keyCode === 32) {
 			// SPACEBAR
 			key.preventDefault();
 			key.stopPropagation();
