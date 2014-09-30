@@ -161,6 +161,11 @@ Graphics = {
 		}
 		this.drawAllRectangles();
 	}, //end createBars
+	changeBarColors : function () {
+		for (var i = 0; i < this.bars.length; i++) {
+			this.bars[i].color = this.colors[ Math.floor((Math.random()*Graphics.colors.length)) ];
+		}
+	},
 	generateBar : function (number) {
 		var bar = {
 			id : number,

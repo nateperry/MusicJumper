@@ -14,10 +14,15 @@ h1, h2, h4, h5, h6 {
 }
 
 a {
+  color: #F09015;
   -webkit-transition: color 300ms ease-in;
   -moz-transition: color 300ms ease-in;
   -o-transition: color 300ms ease-in;
   transition: color 300ms ease-in;
+}
+
+a:hover {
+  color: #FFB955;
 }
 
 .container {
@@ -34,14 +39,18 @@ a {
   background: rgba(0, 0, 0, 0.75);
   z-index: 100;
 }
+#tracklist-container .inner {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 20px;
+}
 #tracklist-container h3 {
   color: #DDD;
-  margin-left: 10px;
 }
 
 #tracklist {
   list-style: none;
-  margin: 10px;
+  margin: 10px 0;
   padding: 0;
 }
 #tracklist a {
@@ -85,6 +94,8 @@ a {
   top: 15%;
   left: 30%;
   width: 40%;
+  min-width: 300px;
+  margin: 0 auto;
   z-index: 10;
   opacity: 0;
   visibility: hidden;
@@ -119,4 +130,33 @@ footer a {
 }
 footer a:hover {
   color: #FF5720;
+}
+
+.mobile-warning {
+  display: none;
+}
+
+@media screen and (max-width: 500px) {
+  .instruction-cta {
+    left: 25px;
+  }
+
+  .mobile-warning {
+    background: #333;
+    color: #fff;
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4000;
+  }
+
+  .mobile-warning .inner {
+    padding: 10px;
+    position: fixed;
+    transform: translateY(-50%);
+    top: 50%;
+  }
 }
